@@ -20,7 +20,19 @@ export default function Login() {
       localStorage.setItem('epvs_user', JSON.stringify(res.data.user))
       navigate('/')
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed')
+      console.error('Full Error Object:', err)
+      
+      // Extract the most detailed message possible from Laravel
+      const detailedMessage = 
+        err.response?.data?.message || 
+        (err.response?.data && typeof err.response.data === 'string' ? err.response.data : null) ||
+        (err.response?.data ? JSON.stringify(err.response.data) : null) || 
+        err.message;
+
+      setError(detailedMessage || 'Login failed')
+
+      // Also throw an alert popup so you can easily read long error tracks on mobile
+      alert("Backend Error Trace:\n" + (typeof detailedMessage === 'string' ? detailedMessage.substring(0, 500) : detailedMessage))
     } finally {
       setLoading(false)
     }
@@ -65,6 +77,7 @@ export default function Login() {
             background: '#fff0f0', border: '1px solid #ffcdd2',
             borderRadius: 10, padding: '12px 16px',
             color: '#c62828', fontSize: 14, marginBottom: 20,
+            wordBreak: 'break-word', overflowY: 'auto', maxHeigth: '150px'
           }}>
             {error}
           </div>
