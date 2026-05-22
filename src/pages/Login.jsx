@@ -15,7 +15,7 @@ export default function Login() {
     setLoading(true)
     setError('')
     try {
-      const res = await api.post('/auth/login', form)
+      const res = await api.post('/login', form)
       localStorage.setItem('epvs_token', res.data.token)
       localStorage.setItem('epvs_user', JSON.stringify(res.data.user))
       navigate('/')
