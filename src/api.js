@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'https://epvs-backend.onrender.com', // Added the /api path prefix here
+  baseURL: 'https://epvs-backend.onrender.com/api', // Added the /api path prefix here
   headers: { 'Content-Type': 'application/json' },
 })
 
