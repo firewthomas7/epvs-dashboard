@@ -217,7 +217,7 @@ export default function Dashboard() {
   const [lastUpdated, setLastUpdated] = useState(new Date())
   const [alert, setAlert] = useState(null)
   const [showSimulate, setShowSimulate] = useState(false)
-  const [webhookToken, setWebhookToken] = useState('74b191a97be73839f99fb7b94345a419a84c36f8162cf9d5a17833c7f26f9675')
+  const [webhookToken, setWebhookToken] = useState('a07fd301c0c3340fded5c48f5e71d9757c4b0be758f15dd29ed592242d37f3ac')
   const [notifications, setNotifications] = useState([])
   const [voiceEnabled, setVoiceEnabled] = useState(true)
   const prevCountRef = useRef(0)
