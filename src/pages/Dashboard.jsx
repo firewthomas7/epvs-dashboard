@@ -217,7 +217,7 @@ export default function Dashboard() {
   const [lastUpdated, setLastUpdated] = useState(new Date())
   const [alert, setAlert] = useState(null)
   const [showSimulate, setShowSimulate] = useState(false)
-  const [webhookToken, setWebhookToken] = useState('a07fd301c0c3340fded5c48f5e71d9757c4b0be758f15dd29ed592242d37f3ac')
+  const [webhookToken, setWebhookToken] = useState('')
   const [notifications, setNotifications] = useState([])
   const [voiceEnabled, setVoiceEnabled] = useState(true)
   const prevCountRef = useRef(0)
@@ -254,13 +254,21 @@ export default function Dashboard() {
   }, [voiceEnabled])
 
   // Fetch webhook token
-  useEffect(() => {
-    api.get('/merchant/bank-accounts').then(res => {
-      const accounts = res.data.bank_accounts || []
-      // We don't get the token from API (hidden for security)
-      // Use tinker to get it, or store it after linking
-    }).catch(() => {})
-  }, [])
+  // Fetch current webhook URL
+useEffect(() => {
+  api.get('/merchant/bank-accounts').then(res => {
+    const accounts = res.data.bank_accounts || []
+
+    if (accounts.length > 0 && accounts[0].webhook_url) {
+      const url = accounts[0].webhook_url
+
+      // Extract token from the webhook URL
+      const token = url.split('/').pop()
+
+      setWebhookToken(token)
+    }
+  }).catch(() => {})
+}, [])
 
   useEffect(() => {
     fetchData()
