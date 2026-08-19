@@ -158,7 +158,7 @@ export default function Employees() {
                   <div style={{ fontSize: 12, color: '#888' }}>{emp.position || 'Employee'}</div>
                 </div>
               </div>
-              <button onClick={() => handleDelete(emp.id)} style={{
+              <button onClick={() => handleDelete(emp.uuid)} style={{
                 background: '#fce4ec', color: '#c62828', border: 'none',
                 borderRadius: 8, padding: '6px 10px', cursor: 'pointer',
               }}>

@@ -16,11 +16,28 @@ export default function BankAccounts() {
     try {
       const res = await api.get('/merchant/bank-accounts')
       setAccounts(res.data.bank_accounts || [])
-    } catch {}
+    } catch (err) {
+      console.error('Failed to fetch bank accounts:', err)
+    }
     finally { setLoading(false) }
   }
 
-  useEffect(() => { fetchAccounts() }, [])
+  useEffect(() => {
+    let cancelled = false
+
+    api.get('/merchant/bank-accounts')
+      .then(res => {
+        if (!cancelled) setAccounts(res.data.bank_accounts || [])
+      })
+      .catch(err => {
+        if (!cancelled) console.error('Failed to fetch bank accounts:', err)
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+
+    return () => { cancelled = true }
+  }, [])
 
   const handleAdd = async (e) => {
     e.preventDefault()
@@ -41,7 +58,9 @@ export default function BankAccounts() {
     try {
       await api.delete(`/merchant/bank-accounts/${uuid}`)
       fetchAccounts()
-    } catch {}
+    } catch (err) {
+      console.error('Failed to unlink bank account:', err)
+    }
   }
 
   const bankColors = {
