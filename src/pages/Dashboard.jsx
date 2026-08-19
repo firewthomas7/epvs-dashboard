@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
 import {
-  TrendingUp, ArrowLeftRight, Clock, AlertTriangle,
+  TrendingUp, Clock, AlertTriangle,
   RefreshCw, CheckCircle, Zap, Volume2, Bell, X
 } from 'lucide-react'
 import {
@@ -123,10 +123,10 @@ const statusColors = {
 
 // ── Simulate Payment Modal ─────────────────────────────────
 function SimulateModal({ onClose, onSuccess, webhookToken }) {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState(() => ({
     amount: '500', sender_name: 'Tigist Alemu',
     sender_phone: '0923456789', reference: 'CBE-TXN-' + Date.now(),
-  })
+  }))
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
@@ -249,7 +249,9 @@ export default function Dashboard() {
       setStats(newStats)
       setTransactions(newTxs)
       setLastUpdated(new Date())
-    } catch {}
+    } catch {
+      // Ignore polling errors and keep the current dashboard state.
+    }
     finally { setLoading(false) }
   }, [voiceEnabled])
 
@@ -271,9 +273,12 @@ useEffect(() => {
 }, [])
 
   useEffect(() => {
-    fetchData()
+    const initialFetch = setTimeout(fetchData, 0)
     const interval = setInterval(fetchData, 8000) // poll every 8s
-    return () => clearInterval(interval)
+    return () => {
+      clearTimeout(initialFetch)
+      clearInterval(interval)
+    }
   }, [fetchData])
 
   const handleSimulateSuccess = (paymentData) => {

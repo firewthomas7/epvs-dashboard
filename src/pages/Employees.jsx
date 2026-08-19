@@ -14,10 +14,13 @@ export default function Employees() {
     try {
       const res = await api.get('/employees')
       setEmployees(res.data.employees || [])
-    } catch {}
+    } catch {
+      setMessage('❌ Error loading employees')
+    }
     finally { setLoading(false) }
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchEmployees() }, [])
 
   const handleAdd = async (e) => {
@@ -38,8 +41,11 @@ export default function Employees() {
     if (!confirm('Remove this employee?')) return
     try {
       await api.delete(`/employees/${uuid}`)
+      setMessage('✅ Employee removed')
       fetchEmployees()
-    } catch {}
+    } catch (err) {
+      setMessage('❌ ' + (err.response?.data?.message || 'Error removing employee'))
+    }
   }
 
   return (
